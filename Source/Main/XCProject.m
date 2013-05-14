@@ -306,6 +306,15 @@
     return nil;
 }
 
+- (XCTarget *)copyTarget:(XCTarget *)target withName:(NSString *)copyName {
+    NSDictionary *dictTarget = [[self objects] objectForKey:target.key];
+    
+    XCTarget *newTarget = [[XCTarget alloc] initWithProject:self key:target.key name:copyName productName:target.name productReference:target.productReference];
+    
+    [_targets addObject:newTarget];
+    return newTarget;
+}
+
 - (void)save
 {
     [_fileOperationQueue commitFileOperations];

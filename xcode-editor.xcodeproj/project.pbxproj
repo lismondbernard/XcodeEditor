@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3F377CF71741C10500C7A74B /* NowAppTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F377CF61741C10500C7A74B /* NowAppTests.m */; };
 		6B019F6F154832C400122D48 /* XCAbstractDefinition.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B51E2FD1547FEDD00DBA0BD /* XCAbstractDefinition.m */; };
 		6B01A05B154A206600122D48 /* XCAbstractDefinition.h in Headers */ = {isa = PBXBuildFile; fileRef = 6B51E2FC1547FEDD00DBA0BD /* XCAbstractDefinition.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6B01A07A154A337A00122D48 /* goat-funny.png in Resources */ = {isa = PBXBuildFile; fileRef = 6B01A079154A337A00122D48 /* goat-funny.png */; };
@@ -130,6 +131,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		3F377CF51741C10500C7A74B /* NowAppTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NowAppTests.h; sourceTree = "<group>"; };
+		3F377CF61741C10500C7A74B /* NowAppTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NowAppTests.m; sourceTree = "<group>"; };
 		6B01A079154A337A00122D48 /* goat-funny.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "goat-funny.png"; sourceTree = "<group>"; };
 		6B3ACFE014F8A2FE00BCFE81 /* XcodeEditor.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = XcodeEditor.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6B3AD01914F8A3AC00BCFE81 /* XCClassDefinition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XCClassDefinition.h; sourceTree = "<group>"; };
@@ -281,6 +284,8 @@
 				6B3AD05C14F8A3B400BCFE81 /* Tests-Prefix.pch */,
 				6B3AD05D14F8A3B400BCFE81 /* Utils */,
 				BA798B5E16A7C0A6B792CBB9 /* ProjectTests.m */,
+				3F377CF51741C10500C7A74B /* NowAppTests.h */,
+				3F377CF61741C10500C7A74B /* NowAppTests.m */,
 				BA798EE31696E3108277FA54 /* TargetTests.m */,
 				BA7988A76A232B877E5CDDEB /* GroupTests.m */,
 				BA7984143FEC00A651B12D88 /* ClassDefinitionTests.m */,
@@ -618,6 +623,7 @@
 				BA798A427D45F5EB9928579C /* SubProjectDefinitionTests.m in Sources */,
 				BA7985B8636EDA34C738B527 /* TargetTests.m in Sources */,
 				BA798B0394D0BCC02CD07FCE /* XcodeFileReferenceTypeTests.m in Sources */,
+				3F377CF71741C10500C7A74B /* NowAppTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

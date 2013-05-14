@@ -146,6 +146,11 @@ __attribute__((__visibility__("default"))) @interface XCProject : NSObject
 */
 - (XCTarget*)targetWithName:(NSString*)name;
 
+/**
+ * Copies the target with the specified name.
+ */
+- (XCTarget *)copyTarget:(XCTarget *)target withName:(NSString *)copyName;
+
 #pragma mark Configurations
 
 /**
