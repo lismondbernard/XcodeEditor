@@ -19,7 +19,7 @@
 #import "XCFileOperationQueue.h"
 #import "XCBuildConfiguration.h"
 #import "Utils/XCMemoryUtils.h"
-#import "KeyBuilder.h"
+#import "XCKeyBuilder.h"
 
 
 @implementation XCProject
@@ -351,8 +351,8 @@
     
     
     [dupBuildConf setObject:buildSettings forKey:@"buildSettings"];
-    KeyBuilder* builtKey = [KeyBuilder forDictionary:dupBuildConf];
-    NSString* dupKey = [builtKey build];
+    XCKeyBuilder *builtKey = [XCKeyBuilder forDictionary:dupBuildConf];
+    NSString *dupKey = [builtKey build];
     [[self objects] setObject:dupBuildConf forKey:dupKey];
     return dupKey;
 }
@@ -366,7 +366,7 @@
     }
     
     [dupBuildConfList setObject:buildConfs forKey:@"buildConfigurations"];
-    KeyBuilder *builtKey = [KeyBuilder forDictionary:dupBuildConfList];
+    XCKeyBuilder *builtKey = [XCKeyBuilder forDictionary:dupBuildConfList];
     NSString *dupKey = [builtKey build];
     [[self objects] setObject:dupBuildConfList forKey:dupKey];
     return dupKey;
@@ -392,27 +392,27 @@
     NSString *namePrefix = [[path componentsSeparatedByString:@".app"] objectAtIndex:0];
     [productFileRef setObject:namePrefix forKey:@"path"];
     
-    NSString *dupProductFileRefKey = [[KeyBuilder forItemNamed:namePrefix] build];
+    NSString *dupProductFileRefKey = [[XCKeyBuilder forItemNamed:namePrefix] build];
     [[self objects] setObject:productFileRef forKey:dupProductFileRefKey];
     
     [copiedDict setObject:dupProductFileRefKey forKey:@"productReference"];
 
     NSMutableArray *buildPhases = [NSMutableArray arrayWithCapacity:3];
-    for (NSString *bf in [copiedDict objectForKey:@"buildPhases"]) {
-        NSMutableDictionary *bfDup = [[[self objects] objectForKey:bf] mutableCopy];
+    for (NSString *buildFile in [copiedDict objectForKey:@"buildPhases"]) {
+        NSMutableDictionary *buildCopyDict = [[[self objects] objectForKey:buildFile] mutableCopy];
         NSMutableArray *dupedFiles = [NSMutableArray array];
-        for (NSString *fid in [bfDup objectForKey:@"files"]) {
+        for (NSString *fid in [buildCopyDict objectForKey:@"files"]) {
             NSMutableDictionary *file = [[[self objects] objectForKey:fid] mutableCopy];
-            KeyBuilder* builder = [KeyBuilder forDictionary:file];
+            XCKeyBuilder *builder = [XCKeyBuilder forDictionary:file];
             NSString *fileKey = [builder build];
             [[self objects] setValue:file forKey:fileKey];
             [dupedFiles addObject:fileKey];
         }
         
-        [bfDup setObject:dupedFiles forKey:@"files"];
-        KeyBuilder* builtKey = [KeyBuilder forDictionary:bfDup];
+        [buildCopyDict setObject:dupedFiles forKey:@"files"];
+        XCKeyBuilder *builtKey = [XCKeyBuilder forDictionary:buildCopyDict];
         NSString *buildPhaseKey = [builtKey build];
-        [[self objects] setObject:bfDup forKey:buildPhaseKey];
+        [[self objects] setObject:buildCopyDict forKey:buildPhaseKey];
         [buildPhases addObject:buildPhaseKey];
     }
     
@@ -426,7 +426,7 @@
         [group performSelector:@selector(addMemberWithKey:) withObject:dupProductFileRefKey];
     }
 
-    KeyBuilder *builtKey = [KeyBuilder forItemNamed:copyName];
+    XCKeyBuilder *builtKey = [XCKeyBuilder forItemNamed:copyName];
     NSString *key = [builtKey build];
     [[self objects] setObject:copiedDict forKey:key];
     XCTarget *dupTarget = [[XCTarget alloc] initWithProject:self key:key name:copyName productName:productName productReference:productFileRefKey];
@@ -470,7 +470,8 @@
         _defaultConfigurationName = [[buildConfigurationDictionary objectForKey:@"defaultConfigurationName"] copy];
     }
 
-    return XCAutorelease([_configurations copy])}
+    return XCAutorelease([_configurations copy])
+}
 
 - (NSDictionary*)configurationWithName:(NSString*)name
 {

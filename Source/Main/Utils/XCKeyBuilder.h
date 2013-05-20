@@ -25,6 +25,7 @@ typedef struct {
 }
 
 + (XCKeyBuilder*) forItemNamed:(NSString*)name;
++ (XCKeyBuilder *) forDictionary:(NSDictionary *)dict;
 
 - (id) initHashValueMD5HashWithBytes:(const void*)bytes length:(NSUInteger)length;
 
