@@ -432,12 +432,13 @@
     XCTarget *dupTarget = [[XCTarget alloc] initWithProject:self key:key name:copyName productName:productName productReference:productFileRefKey];
     [_targets addObject:dupTarget];
 
-    NSMutableDictionary *rootObj = [[[self objects] objectForKey:_rootObjectKey] mutableCopy];
+    NSString *rootKey = [_dataStore objectForKey:@"rootObject"];
+    NSMutableDictionary *rootObj = [[[self objects] objectForKey:rootKey] mutableCopy];
     NSMutableArray *rootObjTargets = [[rootObj objectForKey:@"targets"] mutableCopy];
     [rootObjTargets addObject:dupTarget.key];
     [rootObj setObject:rootObjTargets forKey:@"targets"];
     
-    [[self objects] setObject:rootObj forKey:_rootObjectKey];
+    [[self objects] setObject:rootObj forKey:rootKey];
 
     return dupTarget;
 }
