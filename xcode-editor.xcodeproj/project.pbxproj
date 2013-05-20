@@ -7,7 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		3F377CF71741C10500C7A74B /* NowAppTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F377CF61741C10500C7A74B /* NowAppTests.m */; };
+		3F39F06E174A9CF200477F1A /* NowAppTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F377CF61741C10500C7A74B /* NowAppTests.m */; };
+		3FCD3982174A6AA400512E19 /* KeyBuilder.h in Headers */ = {isa = PBXBuildFile; fileRef = 3FCD3980174A6AA400512E19 /* KeyBuilder.h */; };
+		3FCD3983174A6AA400512E19 /* KeyBuilder.m in Sources */ = {isa = PBXBuildFile; fileRef = 3FCD3981174A6AA400512E19 /* KeyBuilder.m */; };
+		3FF93867174A95BD007F7106 /* KeyBuilder.m in Sources */ = {isa = PBXBuildFile; fileRef = 3FCD3981174A6AA400512E19 /* KeyBuilder.m */; };
 		6B019F6F154832C400122D48 /* XCAbstractDefinition.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B51E2FD1547FEDD00DBA0BD /* XCAbstractDefinition.m */; };
 		6B01A05B154A206600122D48 /* XCAbstractDefinition.h in Headers */ = {isa = PBXBuildFile; fileRef = 6B51E2FC1547FEDD00DBA0BD /* XCAbstractDefinition.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6B01A07A154A337A00122D48 /* goat-funny.png in Resources */ = {isa = PBXBuildFile; fileRef = 6B01A079154A337A00122D48 /* goat-funny.png */; };
@@ -133,6 +136,8 @@
 /* Begin PBXFileReference section */
 		3F377CF51741C10500C7A74B /* NowAppTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NowAppTests.h; sourceTree = "<group>"; };
 		3F377CF61741C10500C7A74B /* NowAppTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NowAppTests.m; sourceTree = "<group>"; };
+		3FCD3980174A6AA400512E19 /* KeyBuilder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyBuilder.h; sourceTree = "<group>"; };
+		3FCD3981174A6AA400512E19 /* KeyBuilder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeyBuilder.m; sourceTree = "<group>"; };
 		6B01A079154A337A00122D48 /* goat-funny.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "goat-funny.png"; sourceTree = "<group>"; };
 		6B3ACFE014F8A2FE00BCFE81 /* XcodeEditor.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = XcodeEditor.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6B3AD01914F8A3AC00BCFE81 /* XCClassDefinition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XCClassDefinition.h; sourceTree = "<group>"; };
@@ -258,8 +263,10 @@
 				6B3AD02514F8A3AC00BCFE81 /* XCTarget.h */,
 				6B3AD01C14F8A3AC00BCFE81 /* XCSourceFile.m */,
 				6B3AD01B14F8A3AC00BCFE81 /* XCSourceFile.h */,
-				6B3AD02414F8A3AC00BCFE81 /* XCProject.m */,
 				6B3AD02314F8A3AC00BCFE81 /* XCProject.h */,
+				6B3AD02414F8A3AC00BCFE81 /* XCProject.m */,
+				3FCD3980174A6AA400512E19 /* KeyBuilder.h */,
+				3FCD3981174A6AA400512E19 /* KeyBuilder.m */,
 				6B3AD02014F8A3AC00BCFE81 /* XCGroup.m */,
 				6B3AD01F14F8A3AC00BCFE81 /* XCGroup.h */,
 				6B3AD01E14F8A3AC00BCFE81 /* XCFileOperationQueue.m */,
@@ -438,6 +445,7 @@
 				E94DE11415443AC100C51271 /* XCProject+SubProject.h in Headers */,
 				BA79845028C69EFC6F98AFF5 /* XcodeEditor.h in Headers */,
 				BA798EED43772945E9BD1284 /* XCBuildConfiguration.h in Headers */,
+				3FCD3982174A6AA400512E19 /* KeyBuilder.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -592,6 +600,7 @@
 				6B4B61221588A070003639E8 /* XCSubProjectDefinition.m in Sources */,
 				E94DE11415443AC100C5126F /* XCProject+SubProject.m in Sources */,
 				6BB58018169561DC00CFD0D3 /* XCBuildConfiguration.m in Sources */,
+				3FCD3983174A6AA400512E19 /* KeyBuilder.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -623,7 +632,8 @@
 				BA798A427D45F5EB9928579C /* SubProjectDefinitionTests.m in Sources */,
 				BA7985B8636EDA34C738B527 /* TargetTests.m in Sources */,
 				BA798B0394D0BCC02CD07FCE /* XcodeFileReferenceTypeTests.m in Sources */,
-				3F377CF71741C10500C7A74B /* NowAppTests.m in Sources */,
+				3FF93867174A95BD007F7106 /* KeyBuilder.m in Sources */,
+				3F39F06E174A9CF200477F1A /* NowAppTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

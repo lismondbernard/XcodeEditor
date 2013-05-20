@@ -19,6 +19,7 @@
 #import "XCFileOperationQueue.h"
 #import "XCBuildConfiguration.h"
 #import "Utils/XCMemoryUtils.h"
+#import "KeyBuilder.h"
 
 
 @implementation XCProject
@@ -306,13 +307,139 @@
     return nil;
 }
 
+- (NSString *) duplicateBuildConfWithKey:(NSString *)key {
+    NSDictionary *baseConfigList = [[self objects] objectForKey:key];
+    NSMutableDictionary *dupBuildConf = [baseConfigList mutableCopy];
+    NSMutableDictionary *buildSettings = [[dupBuildConf objectForKey:@"buildSettings"] mutableCopy];
+    NSMutableArray *searchPaths = [[buildSettings objectForKey:@"FRAMEWORK_SEARCH_PATHS"] mutableCopy];
+    
+    if (searchPaths == nil) {
+        searchPaths = [NSMutableArray arrayWithCapacity:2];
+    }
+    if ([searchPaths isKindOfClass:[NSString class]]) {
+        searchPaths = [NSMutableArray arrayWithObject:searchPaths];
+    }
+    if (![searchPaths containsObject:@"$(inherited)"]) {
+        [searchPaths addObject:@"$(inherited)"];
+    }
+    if (![searchPaths containsObject:@"$(SRCROOT)"] && ![searchPaths containsObject:@"\"$(SRCROOT)\""]) {
+        [searchPaths addObject:@"\"$(SRCROOT)\""];
+    }
+    [buildSettings setObject:searchPaths forKey:@"FRAMEWORK_SEARCH_PATHS"];
+    
+    id flags = [buildSettings objectForKey:@"OTHER_LDFLAGS"];
+    if (flags == nil) {
+        flags = [NSMutableArray arrayWithCapacity:4];
+    }
+    if ([flags isKindOfClass:[NSString class]]) {
+        flags = [NSArray arrayWithObject:(NSString*)flags];
+    }
+    
+    NSMutableArray *lflags = [flags mutableCopy];
+    
+    if (![lflags containsObject:@"$(inherited)"]) {
+        [lflags addObject:@"$(inherited)"];
+    }
+    if (![lflags containsObject:@"-force_load"]) {
+        [lflags addObject:@"-force_load"];
+    }
+    if (![lflags containsObject:@"-lstdc++"]) {
+        [lflags addObject:@"-lstdc++"];
+    }
+    
+    [buildSettings setObject:lflags forKey:@"OTHER_LDFLAGS"];
+    
+    
+    [dupBuildConf setObject:buildSettings forKey:@"buildSettings"];
+    KeyBuilder* builtKey = [KeyBuilder forDictionary:dupBuildConf];
+    NSString* dupKey = [builtKey build];
+    [[self objects] setObject:dupBuildConf forKey:dupKey];
+    return dupKey;
+}
+
+- (NSString *) duplicateBuildConfListWithKey:(NSString*)key {
+    NSDictionary *baseConfigList = [[self objects] objectForKey:key];
+    NSMutableDictionary *dupBuildConfList = [baseConfigList mutableCopy];
+    NSMutableArray *buildConfs = [NSMutableArray array];
+    for (NSString *buildConf in [dupBuildConfList objectForKey:@"buildConfigurations"]) {
+        [buildConfs addObject:[self duplicateBuildConfWithKey:buildConf]];
+    }
+    
+    [dupBuildConfList setObject:buildConfs forKey:@"buildConfigurations"];
+    KeyBuilder *builtKey = [KeyBuilder forDictionary:dupBuildConfList];
+    NSString *dupKey = [builtKey build];
+    [[self objects] setObject:dupBuildConfList forKey:dupKey];
+    return dupKey;
+}
+
 - (XCTarget *)copyTarget:(XCTarget *)target withName:(NSString *)copyName {
     NSDictionary *dictTarget = [[self objects] objectForKey:target.key];
     
-    XCTarget *newTarget = [[XCTarget alloc] initWithProject:self key:target.key name:copyName productName:target.name productReference:target.productReference];
+    NSMutableDictionary *copiedDict = [dictTarget mutableCopy];
+    [copiedDict setObject:copyName forKey:@"name"];
+
+    NSString *buildConfListKey = [copiedDict objectForKey:@"buildConfigurationList"];
+    NSString *dupBuildConfListKey = [self duplicateBuildConfListWithKey:buildConfListKey];
+
+    [copiedDict setObject:dupBuildConfListKey forKey:@"buildConfigurationList"];
     
-    [_targets addObject:newTarget];
-    return newTarget;
+    NSString *productName = [copiedDict valueForKey:@"productName"];
+    [copiedDict setObject:productName forKey:@"productName"];
+
+    NSString *productFileRefKey = [copiedDict objectForKey:@"productReference"];
+    NSMutableDictionary *productFileRef = [[[self objects] objectForKey:productFileRefKey] mutableCopy];
+    NSString *path = [productFileRef objectForKey:@"path"];
+    NSString *namePrefix = [[path componentsSeparatedByString:@".app"] objectAtIndex:0];
+    [productFileRef setObject:namePrefix forKey:@"path"];
+    
+    NSString *dupProductFileRefKey = [[KeyBuilder forItemNamed:namePrefix] build];
+    [[self objects] setObject:productFileRef forKey:dupProductFileRefKey];
+    
+    [copiedDict setObject:dupProductFileRefKey forKey:@"productReference"];
+
+    NSMutableArray *buildPhases = [NSMutableArray arrayWithCapacity:3];
+    for (NSString *bf in [copiedDict objectForKey:@"buildPhases"]) {
+        NSMutableDictionary *bfDup = [[[self objects] objectForKey:bf] mutableCopy];
+        NSMutableArray *dupedFiles = [NSMutableArray array];
+        for (NSString *fid in [bfDup objectForKey:@"files"]) {
+            NSMutableDictionary *file = [[[self objects] objectForKey:fid] mutableCopy];
+            KeyBuilder* builder = [KeyBuilder forDictionary:file];
+            NSString *fileKey = [builder build];
+            [[self objects] setValue:file forKey:fileKey];
+            [dupedFiles addObject:fileKey];
+        }
+        
+        [bfDup setObject:dupedFiles forKey:@"files"];
+        KeyBuilder* builtKey = [KeyBuilder forDictionary:bfDup];
+        NSString *buildPhaseKey = [builtKey build];
+        [[self objects] setObject:bfDup forKey:buildPhaseKey];
+        [buildPhases addObject:buildPhaseKey];
+    }
+    
+    [copiedDict setObject:buildPhases forKey:@"buildPhases"];
+
+    XCGroup *group = nil;
+    NSArray *filteredGroups = [[self groups] filteredArrayUsingPredicate:
+                               [NSPredicate predicateWithFormat:@"displayName == 'Products'"]];
+    if ([filteredGroups count] > 0) {
+        group = [filteredGroups objectAtIndex:0];
+        [group performSelector:@selector(addMemberWithKey:) withObject:dupProductFileRefKey];
+    }
+
+    KeyBuilder *builtKey = [KeyBuilder forItemNamed:copyName];
+    NSString *key = [builtKey build];
+    [[self objects] setObject:copiedDict forKey:key];
+    XCTarget *dupTarget = [[XCTarget alloc] initWithProject:self key:key name:copyName productName:productName productReference:productFileRefKey];
+    [_targets addObject:dupTarget];
+
+    NSMutableDictionary *rootObj = [[[self objects] objectForKey:_rootObjectKey] mutableCopy];
+    NSMutableArray *rootObjTargets = [[rootObj objectForKey:@"targets"] mutableCopy];
+    [rootObjTargets addObject:dupTarget.key];
+    [rootObj setObject:rootObjTargets forKey:@"targets"];
+    
+    [[self objects] setObject:rootObj forKey:_rootObjectKey];
+
+    return dupTarget;
 }
 
 - (void)save

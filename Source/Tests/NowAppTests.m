@@ -16,13 +16,13 @@
 }
 
 - (void)test_demo_target {
-    XCTarget *demoTarget = [_project targetWithName:@"demo"];
-    assertThat(demoTarget, notNilValue());
+    XCTarget *demo1 = [_project targetWithName:@"demo"];
+    assertThat(demo1, notNilValue());
 }
 
 - (void)test_demo_target_copy {
-    XCTarget *demoTarget = [_project targetWithName:@"demo"];
-    XCTarget *copyTarget = [_project copyTarget:demoTarget withName:@"demo-copy"];
+    XCTarget *demo2 = [_project targetWithName:@"demo"];
+    XCTarget *copyTarget = [_project copyTarget:demo2 withName:@"demo-copy"];
     assertThat(copyTarget, notNilValue());
 }
 
