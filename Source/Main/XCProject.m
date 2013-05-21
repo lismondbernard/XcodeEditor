@@ -383,13 +383,11 @@
 
     [copiedDict setObject:dupBuildConfListKey forKey:@"buildConfigurationList"];
     
-    NSString *productName = [copiedDict valueForKey:@"productName"];
-    [copiedDict setObject:productName forKey:@"productName"];
+    [copiedDict setObject:copyName forKey:@"productName"];
 
     NSString *productFileRefKey = [copiedDict objectForKey:@"productReference"];
     NSMutableDictionary *productFileRef = [[[self objects] objectForKey:productFileRefKey] mutableCopy];
-    NSString *path = [productFileRef objectForKey:@"path"];
-    NSString *namePrefix = [[path componentsSeparatedByString:@".app"] objectAtIndex:0];
+    NSString *namePrefix = [NSString stringWithFormat:@"%@.app",copyName];
     [productFileRef setObject:namePrefix forKey:@"path"];
     
     NSString *dupProductFileRefKey = [[XCKeyBuilder forItemNamed:namePrefix] build];
@@ -401,8 +399,8 @@
     for (NSString *buildFile in [copiedDict objectForKey:@"buildPhases"]) {
         NSMutableDictionary *buildCopyDict = [[[self objects] objectForKey:buildFile] mutableCopy];
         NSMutableArray *dupedFiles = [NSMutableArray array];
-        for (NSString *fid in [buildCopyDict objectForKey:@"files"]) {
-            NSMutableDictionary *file = [[[self objects] objectForKey:fid] mutableCopy];
+        for (NSString *fileID in [buildCopyDict objectForKey:@"files"]) {
+            NSMutableDictionary *file = [[[self objects] objectForKey:fileID] mutableCopy];
             XCKeyBuilder *builder = [XCKeyBuilder forDictionary:file];
             NSString *fileKey = [builder build];
             [[self objects] setValue:file forKey:fileKey];
@@ -429,7 +427,7 @@
     XCKeyBuilder *builtKey = [XCKeyBuilder forItemNamed:copyName];
     NSString *key = [builtKey build];
     [[self objects] setObject:copiedDict forKey:key];
-    XCTarget *dupTarget = [[XCTarget alloc] initWithProject:self key:key name:copyName productName:productName productReference:productFileRefKey];
+    XCTarget *dupTarget = [[XCTarget alloc] initWithProject:self key:key name:copyName productName:copyName productReference:productFileRefKey];
     [_targets addObject:dupTarget];
 
     NSString *rootKey = [_dataStore objectForKey:@"rootObject"];
