@@ -427,7 +427,7 @@
     XCKeyBuilder *builtKey = [XCKeyBuilder forItemNamed:copyName];
     NSString *key = [builtKey build];
     [[self objects] setObject:copiedDict forKey:key];
-    XCTarget *dupTarget = [[XCTarget alloc] initWithProject:self key:key name:copyName productName:copyName productReference:productFileRefKey];
+    XCTarget *dupTarget = [[XCTarget alloc] initWithProject:self key:key name:copyName productName:copyName productReference:dupProductFileRefKey];
     [_targets addObject:dupTarget];
 
     NSString *rootKey = [_dataStore objectForKey:@"rootObject"];
