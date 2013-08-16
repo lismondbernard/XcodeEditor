@@ -85,7 +85,12 @@
         _key = [key copy];
         _alias = [alias copy];
         _pathRelativeToParent = [path copy];
+
         _children = [children mutableCopy];
+        if(!_children)
+        {
+            _children = [[NSMutableArray alloc] init];
+        }
     }
     return self;
 }
@@ -231,8 +236,10 @@
 
 - (XCGroup*)addGroupWithPath:(NSString*)path
 {
-    NSString* groupKey = [[XCKeyBuilder forItemNamed:path] build];
-
+    NSString * groupKeyPath = self.pathRelativeToProjectRoot? [self.pathRelativeToProjectRoot stringByAppendingPathComponent:path] : path;
+    
+    NSString* groupKey = [[XCKeyBuilder forItemNamed:groupKeyPath] build];
+    
     NSArray* members = [self members];
     for (id <XcodeGroupMember> groupMember in members)
     {
